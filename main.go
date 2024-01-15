@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -28,8 +29,13 @@ func main() {
 	}
 
 	// Publish a message
-	const message = "Hello, MQTT!"
-	client.Publish(topic, 1, false, message).Wait()
+	n := 0
+	for range time.Tick(time.Second) {
+		// Try to publish and integer value and see that it blocks
+		client.Publish(topic, 1, false, fmt.Sprintf("%d", n)).Wait()
+		// client.Publish(topic, 1, false, n).Wait()
+		n++
+	}
 
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt, syscall.SIGTERM)
