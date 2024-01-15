@@ -48,7 +48,6 @@ func configuredMQTTClientOptions(brokerAddr string) *mqtt.ClientOptions {
 	opts := mqtt.NewClientOptions().AddBroker(brokerAddr)
 	opts.SetClientID("example-client")
 
-	// Doesn't seem to work 😭
 	opts.SetOnConnectHandler(func(c mqtt.Client) {
 		fmt.Println("Connected", c.IsConnected())
 	})
